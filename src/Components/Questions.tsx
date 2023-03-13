@@ -5,7 +5,19 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { DragHandleOutlined } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  AddCircleOutline,
+  ClearOutlined,
+  ContentCopyOutlined,
+  DeleteOutline,
+  DragHandleOutlined,
+  DragIndicatorOutlined,
+} from "@mui/icons-material";
+import TypeDropdown from "./Questions/TypeDropdown";
+import store, { RootState } from "../store";
+import { IconButton } from "@mui/material";
+import questionsSlice from "../questionsSlice";
 
 const QuestionBox = styled.div`
   display: flex;
@@ -25,13 +37,19 @@ const Question = styled.div`
   background-color: white;
   border-radius: 10px;
 `;
-const QuestionDrag = styled.div`
+const QuestionDrag = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: move;
   width: 100%;
   height: 24px;
+`;
+const QuestionTitleBox = styled.div`
+  width: 100%;
+  height: 64px;
+  display: flex;
+  padding: 0px, 24px;
 `;
 const QuestionTitle = styled.input``;
 
@@ -40,12 +58,52 @@ const QuestionOptions = styled.div`
   flex-direction: column;
 `;
 
-const QusetionOption = styled.input``;
+const QuestionOptionBox = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  padding: 0px, 24px;
+`;
+const QuestionOptionDrag = styled.div`
+  justify-content: center;
+  align-items: center;
+  cursor: move;
+  width: 24px;
+`;
+const QuestionOption = styled.input``;
+const QuestionFooter = styled.div`
+  height: 65px;
+  border-top: 1px solid #dadce0;
+  display: flex;
+  justify-content: space-between;
+`;
 const Questions = () => {
-  const onDragEnd = () => {
-    console.log("Dragged");
+  const dispatch = useDispatch();
+  const questions = useSelector((state: RootState) => {
+    return state.questions.value;
+  });
+  const onDragEnd = ({destination, source}: DropResult) => {
+    if(!destination) return;
+    dispatch(questionsSlice.actions.dragQuestion([destination.index, source.index]))
   };
-  const questions = ["q1", "q2"];
+  const addOption = (i: number) => {
+    dispatch(questionsSlice.actions.addOption(i));
+  };
+  const deleteOption = (i: number, oi: number) => {
+    dispatch(questionsSlice.actions.deleteOption([i, oi]));
+  };
+  const handleOptionChange =
+    (i: number, oi: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(questionsSlice.actions.changeOption([i, oi, e.target.value]));
+    };
+  const deleteQuestion = (i: number) => {
+    dispatch(questionsSlice.actions.deleteQuestion(i));
+  };
+  const duplicateQuestion = (i: number) => {
+    dispatch(questionsSlice.actions.duplicateQuestion(i));
+  };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <QuestionBox>
@@ -56,26 +114,57 @@ const Questions = () => {
               {...provided.droppableProps}
               style={{ width: "100%" }}
             >
-              {questions.map((q, i) => (
-                <Draggable key={q} draggableId={q} index={i}>
+              {questions?.map((q, i) => (
+                <Draggable key={q.name} draggableId={q.name} index={i}>
                   {(provided) => (
                     <Question
                       ref={provided.innerRef}
-                      {...provided.dragHandleProps}
                       {...provided.draggableProps}
                     >
-                      <QuestionDrag>
+                      <QuestionDrag {...provided.dragHandleProps}>
                         <DragHandleOutlined />
                       </QuestionDrag>
-                      <QuestionTitle placeholder={q}></QuestionTitle>
+                      <QuestionTitleBox>
+                        <QuestionTitle placeholder={`Question-${i}`} />
+                        <TypeDropdown />
+                      </QuestionTitleBox>
                       <QuestionOptions>
-                        <QusetionOption placeholder="옵션" />
-                        <QusetionOption placeholder="옵션" />
+                        {q.options.map((option, optionIndex) => (
+                          <QuestionOptionBox>
+                            <QuestionOptionDrag>
+                              <DragIndicatorOutlined />
+                            </QuestionOptionDrag>
+                            <QuestionOption
+                              placeholder={optionIndex.toString()}
+                              value={option}
+                              onChange={handleOptionChange(i, optionIndex)}
+                            />
+                            <IconButton
+                              onClick={() => deleteOption(i, optionIndex)}
+                            >
+                              <ClearOutlined />
+                            </IconButton>
+                          </QuestionOptionBox>
+                        ))}
                       </QuestionOptions>
+                      <QuestionFooter>
+                        <IconButton onClick={() => addOption(i)}>
+                          <AddCircleOutline />
+                        </IconButton>
+                        <IconButton>
+                          <ContentCopyOutlined
+                            onClick={() => duplicateQuestion(i)}
+                          />
+                        </IconButton>
+                        <IconButton>
+                          <DeleteOutline onClick={() => deleteQuestion(i)} />
+                        </IconButton>
+                      </QuestionFooter>
                     </Question>
                   )}
                 </Draggable>
               ))}
+              {provided.placeholder}
             </div>
           )}
         </Droppable>

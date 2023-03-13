@@ -1,6 +1,8 @@
+import { useDispatch } from "react-redux";
 import { AddCircleOutline, VisibilityOutlined } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import styled from "styled-components";
+import questionsSlice from "../questionsSlice";
 
 const FooterWrapper = styled.div`
   display: flex;
@@ -22,10 +24,14 @@ const FooterBox = styled.div`
 `;
 
 const Footer = () => {
+  const dispatch = useDispatch();
+  const clickAddButton = () => {
+    dispatch(questionsSlice.actions.addQuestion('new'));
+  };
   return (
     <FooterWrapper>
       <FooterBox>
-        <IconButton color="primary" component="label">
+        <IconButton color="primary" component="label" onClick={clickAddButton}>
           <AddCircleOutline />
         </IconButton>
         <IconButton color="primary" component="label">

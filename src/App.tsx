@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Provider } from "react-redux";
 import Footer from "./Components/Footer";
 import Questions from "./Components/Questions";
 import SurveyTitle from "./Components/SurveyTitle";
+import store from "./store";
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,13 +28,15 @@ const Main = styled.div`
 
 function App() {
   return (
-    <Wrapper>
-      <Main>
-        <SurveyTitle />
-        <Questions />
-      </Main>
-      <Footer />
-    </Wrapper>
+    <Provider store={store}>
+      <Wrapper>
+        <Main>
+          <SurveyTitle />
+          <Questions />
+        </Main>
+        <Footer />
+      </Wrapper>
+    </Provider>
   );
 }
 
