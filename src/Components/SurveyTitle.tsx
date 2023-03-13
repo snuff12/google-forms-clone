@@ -1,7 +1,8 @@
+import { Box, Input, TextField } from "@mui/material";
 import { useState } from "react";
-import styled from "styled-components";
+import { styled } from "@mui/system";
 
-const TitleBox = styled.div`
+const TitleBox = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,18 +15,22 @@ const TitleBox = styled.div`
   border-radius: 10px;
 `;
 
-const TitleInput = styled.input``;
+const TitleInput = styled(Input)`
+  padding: 0px;
+`;
 
-const TitleDiscription = styled.input``;
+const TitleDiscription = styled(Input)`
+  padding: 0%;
+`;
 
 const SurveyTitle = () => {
   const [title, setTitle] = useState<string>("");
   const [discription, setDiscription] = useState<string>("");
 
-  const onChangeTitle = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   };
-  const onChangeDiscription = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChangeDiscription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDiscription(e.currentTarget.value);
   };
 

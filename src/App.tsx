@@ -5,8 +5,9 @@ import Footer from "./Components/Footer";
 import Questions from "./Components/Questions";
 import SurveyTitle from "./Components/SurveyTitle";
 import store from "./store";
+import { Box } from "@mui/material";
 
-const Wrapper = styled.div`
+const Wrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,7 +17,7 @@ const Wrapper = styled.div`
   border-radius: 10px;
 `;
 
-const Main = styled.div`
+const Main = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;

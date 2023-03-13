@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
 import { AddCircleOutline, VisibilityOutlined } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import styled from "styled-components";
 import questionsSlice from "../questionsSlice";
 
-const FooterWrapper = styled.div`
+const FooterWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -13,7 +13,7 @@ const FooterWrapper = styled.div`
   bottom: 0%;
   z-index: 10;
 `;
-const FooterBox = styled.div`
+const FooterBox = styled(Box)`
   display: flex;
   background-color: white;
   height: 60px;

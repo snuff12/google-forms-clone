@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from "react-redux";
 import {
   FormControl,
   InputLabel,
@@ -5,16 +6,29 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { RootState } from "../../store";
+import questionsSlice from "../../questionsSlice";
 
-const TypeDropdown = () => {
-  const [type, setType] = useState<string>("객관식 질문");
+type DropdownProps = {
+  questionIndex: number;
+};
+
+const TypeDropdown: React.FC<DropdownProps> = ({ questionIndex }) => {
+  const dispatch = useDispatch();
+  const type = useSelector((state: RootState) => {
+    return state.questions.value[questionIndex].type;
+  });
   const handleChange = (e: SelectChangeEvent) => {
-    setType(e.target.value);
+    dispatch(
+      questionsSlice.actions.changeTypeOfQuestion([
+        questionIndex,
+        e.target.value,
+      ])
+    );
   };
 
   return (
-    <FormControl style={{width:'208px'}}>
+    <FormControl style={{ width: "208px" }}>
       <InputLabel id="type-dropdown">Type</InputLabel>
       <Select
         labelId="type-dropdown"
